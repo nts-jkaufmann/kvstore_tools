@@ -59,6 +59,7 @@ This functionality is implemented through a generating search command.  Syntax:
 - *(Required)* target: <string> - Specify the hostnames in a comma separated list to upload collections to.
 - *(Optional)* port: <integer> - Specify the target splunkd port on the remote host. (Default: 8089)
 - *(Optional)* app: <string> - Specify the app to find the collection(s) within. (Default: All)
+- *(Optional)* targetapp: <string> - Specify the target app to which the collection should be pushed. (Default: same as source app)
 - *(Optional)* global_scope: [true|false] - Specify the whether or not to include all globally available collections. (Default: false)
 - *(Optional)* collection: <string> - Specify the collection to migrate. (Default: All)
 - *(Optional)* append: [true|false] - Specify whether or not to append records to the target KV Store collections. (Default: false - deletes the collection prior to migrating)
@@ -75,6 +76,7 @@ This functionality is implemented through a generating search command.  Syntax:
 - *(Required)* target: <string> - Specify the hostname to download collections from.
 - *(Optional)* port: <integer> - Specify the target splunkd port on the remote host. (Default: 8089)
 - *(Optional)* app: <string> - Specify the app to find the collection(s) within. (Default: All)
+- *(Optional)* targetapp: <string> - Specify the target app in which the collection should be saved. (Default: same as source app)
 - *(Optional)* global_scope: [true|false] - Specify the whether or not to include all globally available collections. (Default: false)
 - *(Optional)* collection: <string> - Specify the collection to migrate. (Default: All)
 - *(Optional)* append: [true|false] - Specify whether or not to append records to the target KV Store collections. (Default: false - deletes the collection prior to migrating)

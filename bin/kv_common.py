@@ -81,7 +81,7 @@ def get_app_collections(uri, session_key, selected_collection, selected_app, app
 					eprint("Added {0}/{1} to backup list".format(entry_app, entry_collection))
 	return collections
 
-def copy_collection(logger, source_session_key, source_uri, target_session_key, target_uri, app, collection, append):
+def copy_collection(logger, source_session_key, source_uri, target_session_key, target_uri, app, collection, target_app, append):
 	# Enumerate all of the collections in the app (if an app is selected)
 	#collection_contents = download_collection(logger, source_uri, app, collection)
 	source_host = hostname_from_uri(source_uri)
@@ -125,7 +125,7 @@ def copy_collection(logger, source_session_key, source_uri, target_session_key, 
 
 		if result == "success":
 			upload_start_time = time.time()
-			result, message, posted = upload_collection(logger, target_uri, target_session_key, app, collection, output_file)
+			result, message, posted = upload_collection(logger, target_uri, target_session_key, target_app, collection, output_file)
 			upload_end_time = time.time()
 		elif result=="skipped":
 			result = "empty"

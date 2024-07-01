@@ -32,7 +32,7 @@ class KVStorePullCommand(GeneratingCommand):
 
 	##Syntax
 
-	| kvstorepull app="app_name" collection="collection_name" global_scope="false" target="remotehost" targetport=8089
+	| kvstorepull app="app_name" collection="collection_name" targetapp="target_app_name" global_scope="false" target="remotehost" targetport=8089
 
 	##Description
 
@@ -56,6 +56,12 @@ class KVStorePullCommand(GeneratingCommand):
 		doc='''
 			Syntax: collection=<collection_name>
 			Description: The collection to download from the specified app''',
+			require=False)
+
+	targetapp = Option(
+		doc='''
+			Syntax: targetapp=<target_app_name>
+			Description: The app in which to save the collection''',
 			require=False)
 
 	append = Option(
@@ -116,6 +122,11 @@ class KVStorePullCommand(GeneratingCommand):
 			logger.debug('Collection: %s' % self.collection)
 		else:
 			self.collection = None
+		
+		if self.targetapp:
+			logger.debug('Target App: %s' % self.targetapp)
+		else:
+			self.targetapp = None
 
 		if self.global_scope:
 			logger.debug('Global Scope: %s' % self.global_scope)
@@ -185,8 +196,10 @@ class KVStorePullCommand(GeneratingCommand):
 			# Extract the app and collection name from the array
 			collection_app = remote_collection[0]
 			collection_name = remote_collection[1]
+			target_app = self.targetapp or collection_app
+			
 			try:
-				yield(kv.copy_collection(logger, remote_session_key, remote_uri, local_session_key, splunkd_uri, collection_app, collection_name, self.append))
+				yield(kv.copy_collection(logger, remote_session_key, remote_uri, local_session_key, splunkd_uri, collection_app, collection_name, target_app, self.append))
 			except BaseException as e:
 				ui.exit_error('Failed to copy collections from %s to local KV store: %s' % (self.target, repr(e)))
 			

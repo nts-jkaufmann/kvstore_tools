@@ -33,7 +33,7 @@ class KVStorePushCommand(GeneratingCommand):
 
 	##Syntax  
 
-	| kvstorepush app="app_name" collection="collection_name" global_scope="false" target="remotehost[, remotehost2, ...]" append=[true|false] targetport=8089  
+	| kvstorepush app="app_name" collection="collection_name" targetapp="target_app_name" global_scope="false" target="remotehost[, remotehost2, ...]" append=[true|false] targetport=8089  
 
 	##Description  
 
@@ -57,6 +57,12 @@ class KVStorePushCommand(GeneratingCommand):
 		doc='''
 			Syntax: collection=<collection_name>
 			Description: The collection to push within the specified app''',
+			require=False)
+
+	targetapp = Option(
+		doc='''
+			Syntax: targetapp=<target_app_name>
+			Description: The app to push collections into''',
 			require=False)
 
 	append = Option(
@@ -117,6 +123,11 @@ class KVStorePushCommand(GeneratingCommand):
 			logger.debug('Collection: %s' % self.collection)
 		else:
 			self.collection = None
+		
+		if self.targetapp:
+			logger.debug('Target App: %s' % self.targetapp)
+		else:
+			self.targetapp = None
 
 		if self.global_scope:
 			logger.debug('Global Scope: %s' % self.global_scope)
@@ -188,8 +199,10 @@ class KVStorePushCommand(GeneratingCommand):
 				# Extract the app and collection name from the array
 				collection_app = local_collection[0]
 				collection_name = local_collection[1]
+				target_app = self.targetapp or collection_app
+
 				try:
-					yield(kv.copy_collection(logger, local_session_key, splunkd_uri, remote_session_key, remote_uri, collection_app, collection_name, self.append))
+					yield(kv.copy_collection(logger, local_session_key, splunkd_uri, remote_session_key, remote_uri, collection_app, collection_name, target_app, self.append))
 				except BaseException as e:
 					ui.exit_error('Failed to copy collections from %s to remote KV store: %s' % (host, repr(e)))
 			
